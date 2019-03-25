@@ -24,7 +24,7 @@ RUN useradd -U -m superset && \
     chown -R superset:superset /etc/superset && \
     chown -R superset:superset ${SUPERSET_HOME} && \
     apt-get update && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
         build-essential \
         curl \
         default-libmysqlclient-dev \
@@ -34,7 +34,9 @@ RUN useradd -U -m superset && \
         libldap2-dev \
         libpq-dev \
         libsasl2-dev \
-        libssl1.0 && \
+        krb5-user \
+        libssl1.0 \
+	sasl2-bin libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit && \
     apt-get clean && \
     rm -r /var/lib/apt/lists/* && \
     curl https://raw.githubusercontent.com/${SUPERSET_REPO}/${SUPERSET_VERSION}/requirements.txt -o requirements.txt && \
@@ -70,5 +72,8 @@ WORKDIR /home/superset
 # Deploy application
 EXPOSE 8088
 HEALTHCHECK CMD ["curl", "-f", "http://localhost:8088/health"]
-CMD ["gunicorn", "superset:app"]
-USER superset
+COPY entrypoint.sh /home/superset/entrypoint.sh
+COPY kinit.sh /home/superset/kinit.sh
+
+USER root
+CMD ["bash", "/home/superset/entrypoint.sh"]
