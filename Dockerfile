@@ -25,6 +25,7 @@ RUN useradd -U -m superset && \
     chown -R superset:superset ${SUPERSET_HOME} && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
+	supervisor \
         build-essential \
         curl \
         default-libmysqlclient-dev \
@@ -75,6 +76,9 @@ HEALTHCHECK CMD ["curl", "-f", "http://localhost:8088/health"]
 COPY entrypoint.sh /home/superset/entrypoint.sh
 COPY kinit.sh /home/superset/kinit.sh
 COPY superset_config.py /etc/superset/superset_config.py
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+RUN mkdir -p /var/log/supervisord/
 
 USER root
 CMD ["bash", "/home/superset/entrypoint.sh"]
