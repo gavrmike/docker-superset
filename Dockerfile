@@ -74,6 +74,7 @@ EXPOSE 8088
 HEALTHCHECK CMD ["curl", "-f", "http://localhost:8088/health"]
 COPY entrypoint.sh /home/superset/entrypoint.sh
 COPY kinit.sh /home/superset/kinit.sh
+COPY superset_config.py /etc/superset/superset_config.py
 
 USER root
 CMD ["bash", "/home/superset/entrypoint.sh"]

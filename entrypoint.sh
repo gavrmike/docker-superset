@@ -2,4 +2,4 @@ superset-init --username admin --firstname admin --lastname admin --password adm
 
 bash kinit.sh &
 
-gunicorn superset:app
+gunicorn --timeout ${GUNICORN_TIMEOUT:-120} --workers ${GUNICORN_WORKERS:-10} superset:app
