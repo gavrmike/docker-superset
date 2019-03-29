@@ -1,1 +1,1 @@
-docker build -t gavrikov/superset:1.0.5 .
+docker build -t gavrikov/superset:1.0.6 .
